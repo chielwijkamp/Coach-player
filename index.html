@@ -17,94 +17,42 @@ header{display:flex;align-items:center;justify-content:space-between;gap:16px;bo
 .badge{border:1px solid #394000;color:var(--lime);padding:9px 12px;border-radius:999px;font-weight:900}
 .home{display:grid;grid-template-columns:1.15fr .85fr;gap:18px;margin-top:20px}
 .panel{background:linear-gradient(180deg,#111416,#090b0c);border:1px solid #24282b;border-radius:20px;padding:20px;box-shadow:0 18px 50px #0008}
-h2{margin:0 0 12px;color:var(--lime)}textarea{width:100%;height:180px;background:#050607;color:#fff;border:2px solid #333;border-radius:14px;padding:14px;font-size:16px;resize:vertical}
+h2{margin:0 0 12px;color:var(--lime)}
+textarea{width:100%;height:180px;background:#050607;color:#fff;border:2px solid #333;border-radius:14px;padding:14px;font-size:16px;resize:vertical}
 .actions{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
 button{background:#090b0c;color:#fff;border:2px solid #444;border-radius:12px;padding:12px 18px;font-weight:900;font-size:16px;cursor:pointer}
 button.primary{background:var(--lime);color:#090b0c;border-color:var(--lime)}
 button.secondary{border-color:var(--yellow);color:var(--yellow)}
 .quick{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.quick button{min-height:84px}
 .info{color:#b9bec2;line-height:1.5}.small{font-size:13px;color:#7f868b}
-#player{display:none;margin-top:18px}.playerGrid{display:grid;grid-template-columns:1fr .78fr 1fr;gap:16px;align-items:center}
-.card{background:#030405;border-radius:18px;padding:12px;min-height:490px;display:flex;flex-direction:column}.cur{border:3px solid var(--yellow)}.next{border:3px solid var(--lime)}
-.label{text-align:center;font-weight:900;font-size:22px;padding:7px}.cur .label{color:var(--yellow)}.next .label{color:var(--lime)}
+#player{display:none;margin-top:18px}
+.playerGrid{display:grid;grid-template-columns:1fr .78fr 1fr;gap:16px;align-items:center}
+.card{background:#030405;border-radius:18px;padding:12px;min-height:490px;display:flex;flex-direction:column}
+.cur{border:3px solid var(--yellow)}
+.next{border:3px solid var(--lime)}
+.label{text-align:center;font-weight:900;font-size:22px;padding:7px}
+.cur .label{color:var(--yellow)}
+.next .label{color:var(--lime)}
 .visual{flex:1;display:flex;align-items:center;justify-content:center;font-size:80px;background:#07090a;border-radius:12px}
-.name{text-align:center;font-weight:900;font-size:22px;padding:12px}.meta{display:grid;grid-template-columns:repeat(3,1fr);border-top:2px solid currentColor;padding-top:9px;gap:5px}
-.meta div{text-align:center;font-size:12px}.meta b{display:block;margin-bottom:5px}.cur .meta{color:var(--yellow)}.next .meta{color:var(--lime)}.meta span{color:#fff}
-.mid{display:flex;flex-direction:column;align-items:center}.ring{width:min(31vw,350px);aspect-ratio:1;border:8px solid var(--yellow);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-direction:column;background:#030405}
-#status{font-size:28px;font-weight:900;color:var(--yellow)}#timer{font-size:70px;font-weight:1000}.round{font-weight:900;color:var(--yellow);margin-top:15px}
-body.rest .ring{border-color:var(--orange)}body.rest #status,body.rest .round{color:var(--orange)}
+.name{text-align:center;font-weight:900;font-size:22px;padding:12px}
+.meta{display:grid;grid-template-columns:repeat(3,1fr);border-top:2px solid currentColor;padding-top:9px;gap:5px}
+.meta div{text-align:center;font-size:12px}
+.meta b{display:block;margin-bottom:5px}
+.cur .meta{color:var(--yellow)}
+.next .meta{color:var(--lime)}
+.meta span{color:#fff}
+.mid{display:flex;flex-direction:column;align-items:center}
+.ring{width:min(31vw,350px);aspect-ratio:1;border:8px solid var(--yellow);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-direction:column;background:#030405}
+#status{font-size:28px;font-weight:900;color:var(--yellow)}
+#timer{font-size:70px;font-weight:1000}
+.round{font-weight:900;color:var(--yellow);margin-top:15px}
+body.rest .ring{border-color:var(--orange)}
+body.rest #status,body.rest .round{color:var(--orange)}
 .playerControls{display:flex;justify-content:center;gap:10px;margin-top:18px}
-@media(max-width:800px){.home{grid-template-columns:1fr}.playerGrid{grid-template-columns:1fr}.card{min-height:320px}.ring{width:260px}#timer{font-size:58px}}
-</style>
-</head>
-<body><div class="app">
-<header><div class="brand">COACH <span>PLAYER</span></div><div class="badge">LIVE TRAINING</div></header>
-
-<section id="home" class="home">
-<div class="panel">
-<h2>TRAININGSCODE</h2>
-<p class="info">Plak hier de Coach-code die je van mij krijgt. Eén Player, elke training anders.</p>
-<textarea id="code" placeholder='Bijvoorbeeld: {"title":"21 MIN SPIERMASSA","blocks":[...]}'></textarea>
-<div class="actions"><button class="primary" id="load">LADEN</button><button class="secondary" id="demo">DEMO LADEN</button></div>
-<p id="msg" class="small"></p>
-</div>
-<div class="panel">
-<h2>COACH PLAYER</h2>
-<div class="quick"><button data-min="15">15 MIN</button><button data-min="21">21 MIN</button><button data-min="30">30 MIN</button></div>
-<p class="info">De vaste app bevat straks je template, timer, piepjes en oefenbibliotheek. Alleen het trainingsrecept verandert.</p>
-<p class="small">Voor echte installatie als app moet deze map via HTTPS worden geopend. Daarna kun je hem aan je startscherm toevoegen.</p>
-</div>
-</section>
-
-<section id="player">
-<div class="playerGrid">
-<div class="card cur"><div class="label">HUIDIGE OEFENING</div><div class="visual" id="curVisual">🏋️</div><div class="name" id="curName"></div><div class="meta"><div><b>MATERIAAL</b><span id="curMat"></span></div><div><b>GEWICHT</b><span id="curWeight"></span></div><div><b>BANK</b><span id="curBench"></span></div></div></div>
-<div class="mid"><div class="ring"><div id="status">WORK</div><div id="timer">00:40</div></div><div class="round" id="round">RONDE 1 / 3</div><div id="cue" class="small"></div></div>
-<div class="card next"><div class="label">VOLGENDE OEFENING</div><div class="visual" id="nextVisual">💪</div><div class="name" id="nextName"></div><div class="meta"><div><b>MATERIAAL</b><span id="nextMat"></span></div><div><b>GEWICHT</b><span id="nextWeight"></span></div><div><b>BANK</b><span id="nextBench"></span></div></div></div>
-</div>
-<div class="playerControls"><button id="back">TERUG</button><button id="reset">RESET</button><button class="primary" id="start">START</button></div>
-</section>
-</div>
-<script>
-if('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('./service-worker.js');
-
-const DEMO={
-"title":"21 MIN SPIERMASSA",
-"blocks":[
-{"type":"work","name":"DUMBBELL BENCH PRESS","material":"2 DUMBBELLS","weight":"2 × 12 KG","bench":"VLAK","sec":40,"round":"RONDE 1 / 3","cue":"Rustig zakken • krachtig drukken","icon":"🏋️"},
-{"type":"rest","name":"ONE-ARM DUMBBELL ROW","material":"1 DUMBBELL","weight":"14 KG","bench":"VLAK","sec":20,"round":"RONDE 1 / 3","cue":"Dumbbell en bank klaarzetten","icon":"💪"},
-{"type":"work","name":"ONE-ARM DUMBBELL ROW","material":"1 DUMBBELL","weight":"14 KG","bench":"VLAK","sec":40,"round":"RONDE 1 / 3","cue":"Trek elleboog richting heup","icon":"💪"},
-{"type":"rest","name":"SEATED SHOULDER PRESS","material":"2 DUMBBELLS","weight":"2 × 8 KG","bench":"RECHTOP","sec":20,"round":"RONDE 1 / 3","cue":"Bank rechtop zetten","icon":"⬆️"},
-{"type":"work","name":"SEATED SHOULDER PRESS","material":"2 DUMBBELLS","weight":"2 × 8 KG","bench":"RECHTOP","sec":40,"round":"RONDE 1 / 3","cue":"Ribben laag • gecontroleerd","icon":"⬆️"},
-
-{"type":"rest","name":"DUMBBELL BENCH PRESS","material":"2 DUMBBELLS","weight":"2 × 12 KG","bench":"VLAK","sec":20,"round":"RONDE 2 / 3","cue":"Bank vlak • dumbbells klaar","icon":"🏋️"},
-{"type":"work","name":"DUMBBELL BENCH PRESS","material":"2 DUMBBELLS","weight":"2 × 12 KG","bench":"VLAK","sec":40,"round":"RONDE 2 / 3","cue":"Rustig zakken • krachtig drukken","icon":"🏋️"},
-{"type":"rest","name":"ONE-ARM DUMBBELL ROW","material":"1 DUMBBELL","weight":"14 KG","bench":"VLAK","sec":20,"round":"RONDE 2 / 3","cue":"Dumbbell en bank klaarzetten","icon":"💪"},
-{"type":"work","name":"ONE-ARM DUMBBELL ROW","material":"1 DUMBBELL","weight":"14 KG","bench":"VLAK","sec":40,"round":"RONDE 2 / 3","cue":"Trek elleboog richting heup","icon":"💪"},
-{"type":"rest","name":"SEATED SHOULDER PRESS","material":"2 DUMBBELLS","weight":"2 × 8 KG","bench":"RECHTOP","sec":20,"round":"RONDE 2 / 3","cue":"Bank rechtop zetten","icon":"⬆️"},
-{"type":"work","name":"SEATED SHOULDER PRESS","material":"2 DUMBBELLS","weight":"2 × 8 KG","bench":"RECHTOP","sec":40,"round":"RONDE 2 / 3","cue":"Ribben laag • gecontroleerd","icon":"⬆️"},
-
-{"type":"rest","name":"DUMBBELL BENCH PRESS","material":"2 DUMBBELLS","weight":"2 × 12 KG","bench":"VLAK","sec":20,"round":"RONDE 3 / 3","cue":"Laatste ronde • bank vlak","icon":"🏋️"},
-{"type":"work","name":"DUMBBELL BENCH PRESS","material":"2 DUMBBELLS","weight":"2 × 12 KG","bench":"VLAK","sec":40,"round":"RONDE 3 / 3","cue":"Rustig zakken • krachtig drukken","icon":"🏋️"},
-{"type":"rest","name":"ONE-ARM DUMBBELL ROW","material":"1 DUMBBELL","weight":"14 KG","bench":"VLAK","sec":20,"round":"RONDE 3 / 3","cue":"Dumbbell en bank klaarzetten","icon":"💪"},
-{"type":"work","name":"ONE-ARM DUMBBELL ROW","material":"1 DUMBBELL","weight":"14 KG","bench":"VLAK","sec":40,"round":"RONDE 3 / 3","cue":"Trek elleboog richting heup","icon":"💪"},
-{"type":"rest","name":"SEATED SHOULDER PRESS","material":"2 DUMBBELLS","weight":"2 × 8 KG","bench":"RECHTOP","sec":20,"round":"RONDE 3 / 3","cue":"Bank rechtop zetten","icon":"⬆️"},
-{"type":"work","name":"SEATED SHOULDER PRESS","material":"2 DUMBBELLS","weight":"2 × 8 KG","bench":"RECHTOP","sec":40,"round":"RONDE 3 / 3","cue":"Laatste set • gecontroleerd","icon":"⬆️"}
-]};
-
-let plan=null, idx=0, rem=0, timerId=null, running=false, audioCtx=null;
-const $=id=>document.getElementById(id);
-function beep(f,d=.11,v=.12){if(!audioCtx)audioCtx=new (window.AudioContext||window.webkitAudioContext)();let o=audioCtx.createOscillator(),g=audioCtx.createGain();o.frequency.value=f;o.connect(g);g.connect(audioCtx.destination);g.gain.value=v;o.start();g.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+d);o.stop(audioCtx.currentTime+d+.02)}
-function fmt(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
-function current(){return plan.blocks[idx]}
-function nextWork(){for(let i=idx+1;i<plan.blocks.length;i++){if(plan.blocks[i].type==='work')return plan.blocks[i]}return null}
-function fill(prefix,b){if(!b){$(prefix+'Name').textContent='FINISH';$(prefix+'Mat').textContent='—';$(prefix+'Weight').textContent='—';$(prefix+'Bench').textContent='—';$(prefix+'Visual').textContent='✅';return}$(prefix+'Name').textContent=b.name;$(prefix+'Mat').textContent=b.material||'—';$(prefix+'Weight').textContent=b.weight||'—';$(prefix+'Bench').textContent=b.bench||'—';$(prefix+'Visual').textContent=b.icon||'🏋️'}
-function draw(){let b=current();document.body.classList.toggle('rest',b.type==='rest');$('status').textContent=b.type==='work'?'WORK':'WISSEL';$('timer').textContent=fmt(rem);$('round').textContent=b.round||plan.title;$('cue').textContent=b.cue||'';fill('cur',b);fill('next',nextWork())}
-function load(p){plan=p;idx=0;rem=p.blocks[0].sec;running=false;if(timerId)clearInterval(timerId);$('home').style.display='none';$('player').style.display='block';$('start').textContent='START';draw()}
-$('demo').onclick=()=>{$('code').value=JSON.stringify(DEMO);$('msg').textContent='Demo geladen in het invoervak.'}
-$('load').onclick=()=>{try{let p=JSON.parse($('code').value);if(!p.blocks?.length)throw 0;load(p)}catch(e){$('msg').textContent='Code niet herkend.'}}
-document.querySelectorAll('[data-min]').forEach(b=>b.onclick=()=>{$('code').value=JSON.stringify(DEMO);$('msg').textContent='Demo-recept geplaatst. Tik LADEN.'})
-$('start').onclick=()=>{if(!plan)return;if(running){clearInterval(timerId);running=false;$('start').textContent='START';return}if(!audioCtx)audioCtx=new (window.AudioContext||window.webkitAudioContext)();audioCtx.resume();running=true;$('start').textContent='PAUZE';beep(current().type==='work'?1450:520,.2,.16);timerId=setInterval(()=>{if(rem===10)beep(800);if([3,2,1].includes(rem))beep(1050);rem--;if(rem<=0){idx++;if(idx>=plan.blocks.length){clearInterval(timerId);running=false;$('start').textContent='KLAAR';beep(1650,.25,.2);return}rem=current().sec;beep(current().type==='work'?1450:520,.2,.16)}draw()},1000)}
-$('reset').onclick=()=>{if(timerId)clearInterval(timerId);running=false;idx=0;rem=plan.blocks[0].sec;$('start').textContent='START';draw()}
-$('back').onclick=()=>{if(timerId)clearInterval(timerId);running=false;$('player').style.display='none';$('home').style.display='grid'}
-</script></body></html>
+@media(max-width:800px){
+.home{grid-template-columns:1fr}
+.playerGrid{grid-template-columns:1fr}
+.card{min-height:320px}
+.ring{width:260px}
+#timer{font-size:58px}
+}
