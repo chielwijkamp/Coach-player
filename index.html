@@ -65,6 +65,7 @@ body.rest .ring{border-color:var(--orange)}body.rest #status,body.rest .round{co
 <div class="playerControls"><button id="back">TERUG</button><button id="reset">RESET</button><button class="primary" id="start">START</button></div>
 </section>
 </div>
+
 <script>
 if('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('./service-worker.js');
 
@@ -92,19 +93,96 @@ const DEMO={
 {"type":"work","name":"SEATED SHOULDER PRESS","material":"2 DUMBBELLS","weight":"2 × 8 KG","bench":"RECHTOP","sec":40,"round":"RONDE 3 / 3","cue":"Laatste set • gecontroleerd","icon":"⬆️"}
 ]};
 
-let plan=null, idx=0, rem=0, timerId=null, running=false, audioCtx=null;
+let plan=null,idx=0,rem=0,timerId=null,running=false,audioCtx=null;
 const $=id=>document.getElementById(id);
+
 function beep(f,d=.11,v=.12){if(!audioCtx)audioCtx=new (window.AudioContext||window.webkitAudioContext)();let o=audioCtx.createOscillator(),g=audioCtx.createGain();o.frequency.value=f;o.connect(g);g.connect(audioCtx.destination);g.gain.value=v;o.start();g.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+d);o.stop(audioCtx.currentTime+d+.02)}
 function fmt(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
 function current(){return plan.blocks[idx]}
 function nextWork(){for(let i=idx+1;i<plan.blocks.length;i++){if(plan.blocks[i].type==='work')return plan.blocks[i]}return null}
+function previousWork(){for(let i=idx-1;i>=0;i--){if(plan.blocks[i].type==='work')return plan.blocks[i]}return plan.blocks.find(b=>b.type==='work')||null}
 function fill(prefix,b){if(!b){$(prefix+'Name').textContent='FINISH';$(prefix+'Mat').textContent='—';$(prefix+'Weight').textContent='—';$(prefix+'Bench').textContent='—';$(prefix+'Visual').textContent='✅';return}$(prefix+'Name').textContent=b.name;$(prefix+'Mat').textContent=b.material||'—';$(prefix+'Weight').textContent=b.weight||'—';$(prefix+'Bench').textContent=b.bench||'—';$(prefix+'Visual').textContent=b.icon||'🏋️'}
-function draw(){let b=current();document.body.classList.toggle('rest',b.type==='rest');$('status').textContent=b.type==='work'?'WORK':'WISSEL';$('timer').textContent=fmt(rem);$('round').textContent=b.round||plan.title;$('cue').textContent=b.cue||'';fill('cur',b);fill('next',nextWork())}
-function load(p){plan=p;idx=0;rem=p.blocks[0].sec;running=false;if(timerId)clearInterval(timerId);$('home').style.display='none';$('player').style.display='block';$('start').textContent='START';draw()}
+
+function draw(){
+let b=current();
+document.body.classList.toggle('rest',b.type==='rest');
+$('status').textContent=b.type==='work'?'WORK':'WISSEL';
+$('timer').textContent=fmt(rem);
+$('round').textContent=b.round||plan.title;
+$('cue').textContent=b.cue||'';
+
+if(b.type==='rest'){
+fill('cur',previousWork());
+fill('next',nextWork());
+}else{
+fill('cur',b);
+fill('next',nextWork());
+}
+}
+
+function load(p){plan=p;idx=0;rem=p.blocks[0].sec;running=false;if(timerId)clearInterval(timerId);timerId=null;$('home').style.display='none';$('player').style.display='block';$('start').textContent='START';draw()}
+
 $('demo').onclick=()=>{$('code').value=JSON.stringify(DEMO);$('msg').textContent='Demo geladen in het invoervak.'}
 $('load').onclick=()=>{try{let p=JSON.parse($('code').value);if(!p.blocks?.length)throw 0;load(p)}catch(e){$('msg').textContent='Code niet herkend.'}}
 document.querySelectorAll('[data-min]').forEach(b=>b.onclick=()=>{$('code').value=JSON.stringify(DEMO);$('msg').textContent='Demo-recept geplaatst. Tik LADEN.'})
-$('start').onclick=()=>{if(!plan)return;if(running){clearInterval(timerId);running=false;$('start').textContent='START';return}if(!audioCtx)audioCtx=new (window.AudioContext||window.webkitAudioContext)();audioCtx.resume();running=true;$('start').textContent='PAUZE';beep(current().type==='work'?1450:520,.2,.16);timerId=setInterval(()=>{if(rem===10)beep(800);if([3,2,1].includes(rem))beep(1050);rem--;if(rem<=0){idx++;if(idx>=plan.blocks.length){clearInterval(timerId);running=false;$('start').textContent='KLAAR';beep(1650,.25,.2);return}rem=current().sec;beep(current().type==='work'?1450:520,.2,.16)}draw()},1000)}
-$('reset').onclick=()=>{if(timerId)clearInterval(timerId);running=false;idx=0;rem=plan.blocks[0].sec;$('start').textContent='START';draw()}
-$('back').onclick=()=>{if(timerId)clearInterval(timerId);running=false;$('player').style.display='none';$('home').style.display='grid'}
-</script></body></html>
+
+$('start').onclick=()=>{
+if(!plan)return;
+
+if(running){
+clearInterval(timerId);
+timerId=null;
+running=false;
+$('start').textContent='START';
+return;
+}
+
+if(!audioCtx)audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+audioCtx.resume();
+running=true;
+$('start').textContent='PAUZE';
+beep(current().type==='work'?1450:520,.2,.16);
+
+timerId=setInterval(()=>{
+if(rem===10)beep(800);
+if([3,2,1].includes(rem))beep(1050);
+
+rem--;
+
+if(rem<=0){
+idx++;
+
+if(idx>=plan.blocks.length){
+clearInterval(timerId);
+timerId=null;
+running=false;
+rem=0;
+
+document.body.classList.remove('rest');
+$('timer').textContent='00:00';
+$('status').textContent='KLAAR';
+$('round').textContent='TRAINING VOLTOOID';
+$('cue').textContent='Sterk gewerkt.';
+$('start').textContent='START';
+
+let first=plan.blocks.find(b=>b.type==='work')||null;
+fill('cur',first);
+fill('next',null);
+
+beep(1650,.25,.2);
+return;
+}
+
+rem=current().sec;
+beep(current().type==='work'?1450:520,.2,.16);
+}
+
+draw();
+},1000);
+}
+
+$('reset').onclick=()=>{if(timerId)clearInterval(timerId);timerId=null;running=false;idx=0;rem=plan.blocks[0].sec;$('start').textContent='START';draw()}
+$('back').onclick=()=>{if(timerId)clearInterval(timerId);timerId=null;running=false;$('player').style.display='none';$('home').style.display='grid'}
+</script>
+</body>
+</html>
